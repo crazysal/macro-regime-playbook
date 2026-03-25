@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Macro Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #111; color: #eee; }
+    .grid { display: flex; gap: 20px; }
+    .card { padding: 15px; background: #1c1c1c; border-radius: 8px; }
+    canvas { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>📊 Macro Regime Monitor</h1>
+<p id="timestamp"></p>
+
+<div class="grid">
+  <div class="card">💵 UUP: <span id="uup"></span></div>
+  <div class="card">🪙 GLD: <span id="gld"></span></div>
+  <div class="card">🛢️ OIL: <span id="oil"></span></div>
+  <div class="card">📈 SPY: <span id="spy"></span></div>
+</div>
+
+<canvas id="chart"></canvas>
+
+<script>
+fetch("data/latest.json")
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("timestamp").innerText = "Last updated: " + d.timestamp;
+
+    document.getElementById("uup").innerText = d.UUP;
+    document.getElementById("gld").innerText = d.GLD;
+    document.getElementById("oil").innerText = d.USO;
+    document.getElementById("spy").innerText = d.SPY;
+
+    new Chart(document.getElementById("chart"), {
+      type: "line",
+      data: {
+        labels: d.history.dates,
+        datasets: [
+          { label: "SPY", data: d.history.SPY, borderColor: "green" },
+          { label: "GLD", data: d.history.GLD, borderColor: "gold" }
+        ]
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
